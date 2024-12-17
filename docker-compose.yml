@@ -1,0 +1,84 @@
+#
+# services:
+#   client:
+#     build: 
+#       context: ./frontend/monke
+#     ports:
+#       - "3000:3000"
+#     depends_on:
+#       - server
+#
+#   server:
+#     build: 
+#       context: ./backend
+#     ports:
+#       - "5000:5000"
+#     depends_on:
+#       - mysql
+#     environment:
+#       MYSQL_HOST: localhost
+#       MYSQL_USER: rejio
+#       MYSQL_PASSWORD: xoagera001
+#       MYSQL_DATABASE: employee_db
+#
+#   mysql:
+#     image: mysql:8.0
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: xoagera001
+#       MYSQL_DATABASE: employee_db
+#       MYSQL_USER: rejio
+#       MYSQL_PASSWORD: xoagera001
+#     ports:
+#       - "3306:3306"
+#
+#
+
+services:
+  client:
+    build: 
+      context: ./frontend/monke
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    networks:
+      - app-network
+
+  server:
+    build: 
+      context: ./backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+    environment:
+      MYSQL_HOST: mysql          # Use the service name 'mysql' as the hostname
+      MYSQL_USER: rejio
+      MYSQL_PASSWORD: xoagera001
+      MYSQL_DATABASE: employee_db
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: xoagera001
+      MYSQL_DATABASE: employee_db
+      MYSQL_USER: rejio
+      MYSQL_PASSWORD: xoagera001
+    ports:
+      - "3301:3301"
+    networks:
+      - app-network
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
+
