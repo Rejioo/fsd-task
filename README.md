@@ -1,2 +1,1 @@
-# ViVit
 # fsd-task
